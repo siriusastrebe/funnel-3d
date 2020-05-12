@@ -15,6 +15,9 @@ module.exports = {
       include: [
           path.resolve(__dirname, "client")
       ],
+      exclude: [
+          path.resolve(__dirname, "server")
+      ]
     },
     {
       test: /\.css$/,

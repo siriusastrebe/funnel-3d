@@ -26,35 +26,52 @@ function paraFunction (a, b, target) {
 */
 
 const renderer = new THREE.WebGLRenderer( { antialias: true } );
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 20000 );
-camera.position.set(0, 0, 100);
-
+camera.position.set(0, 0, 10);
 
 var geometry = new THREE.ParametricGeometry( funnelParametric, 250, 250 );
-var material = new THREE.MeshPhysicalMaterial( { color: 0x00ff00 } );
-var klein = new THREE.Mesh( geometry, material );
-scene.add( klein );
+var material = new THREE.MeshPhysicalMaterial( { color: 0x88ff88 } );
+var funnel = new THREE.Mesh( geometry, material );
+funnel.castShadow = true; //default is false
+funnel.receiveShadow = false; //default
 
-const light = new THREE.AmbientLight( 0xffffff, 0.8 );
+scene.add(funnel);
+
+const light = new THREE.AmbientLight( 0xffffff, 0.4 );
 scene.add(light);
 
-const light2 = new THREE.DirectionalLight( 0xff8888, 5 );
-scene.add(light2);
+const light2 = new THREE.DirectionalLight( 0xff8888, 3 );
+light2.position.set(0,1,1);
+light2.castShadow = true;
+light2.target = funnel;
 
-const container = document.createElement( 'div' );
-document.body.appendChild( container );
-container.appendChild( renderer.domElement );
+scene.add(light2);
+const helper = new THREE.DirectionalLightHelper( light2, 5 );
+scene.add(helper);
+
+
+
+const container = document.createElement('div');
+document.body.appendChild(container);
+container.appendChild(renderer.domElement);
 
 renderer.setSize(width , height);
 
-var controls = new OrbitControls( camera, renderer.domElement );
+var controls = new OrbitControls(camera, renderer.domElement);
 controls.update();
 
-renderer.render( scene, camera );
+renderer.render(scene, camera);
 
+var lightRotation = 0.0;
 animate();
 function animate() {
+  lightRotation += 0.01
+  light2.position.set(0, Math.sin(lightRotation) * 10, Math.cos(lightRotation) * 10);
+
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);

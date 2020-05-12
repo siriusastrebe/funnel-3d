@@ -2,7 +2,7 @@
   "scripts": {
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot ./client/",
     "concurrently": "concurrently \"npm run server\" \"npm run client\"",
-    "dev": "nodemon server/app.js --exec \"npm run client\"; echo restarting server at"
+    "dev": "nodemon server/app.js --exec \"npm run client; echo restarting server at \""
   },
   "dependencies": {
     "http-server": "^0.12.3",
